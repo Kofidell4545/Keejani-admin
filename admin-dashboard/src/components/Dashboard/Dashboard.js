@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import api from "../../config/axios";
 import "./Dashboard.css";
 import {
   LineChart,
@@ -13,8 +14,68 @@ import {
 } from "recharts";
 import { MdArrowForward } from "react-icons/md";
 import { format, startOfMonth, endOfMonth } from "date-fns";
+import { testAuth } from "../../services/auth";
 
 const Dashboard = () => {
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        await testAuth(); // Test authentication
+        fetchDashboardData(); // Only fetch after successful auth
+      } catch (err) {
+        console.error("Authentication failed:", err);
+        setError("Authentication failed");
+      }
+    };
+
+    init();
+  }, []);
+
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get("/admin/dashboard", {
+        params: {
+          id: "admin",
+        },
+      });
+
+      console.log("Dashboard Data:", response.data);
+      setDashboardData(response.data);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch dashboard data");
+      console.error("Dashboard fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading)
+    return (
+      <div className="dashboard">
+        <div className="dashboard-header">
+          <h1>Dashboard</h1>
+          <div className="date-range">Loading...</div>
+        </div>
+        <div className="loading-state">Loading dashboard data...</div>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="dashboard">
+        <div className="dashboard-header">
+          <h1>Dashboard</h1>
+        </div>
+        <div className="error-state">Error: {error}</div>
+      </div>
+    );
+
   // Get current date range
   const currentDate = new Date();
   const monthStart = startOfMonth(currentDate);
