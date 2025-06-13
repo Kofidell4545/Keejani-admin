@@ -3,14 +3,14 @@ import api from "../config/axios";
 export const loginUser = async (credentials) => {
   try {
     console.log("Attempting login with:", {
-      email: "pandit.alabi@devlaps.co",
+      email: "davidnhyiraba8@gmail.co",
       password: "Admin123.",
       role: "ADMIN",
     });
 
     const response = await api.post("/auth/login", {
-      email: "pandit.alabi@devlaps.co",
-      password: "Admin123.",
+      email: "davidnhyiraba8@gmail.com",
+      password: "Admin123d.",
       role: "ADMIN",
     });
 

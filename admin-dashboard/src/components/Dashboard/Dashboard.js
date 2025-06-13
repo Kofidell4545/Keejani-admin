@@ -38,7 +38,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       setLoading(true);
-      const response = await api.get("/admin/dashboard", {
+      const response = await api.get("https://keejani-api.devlaps.co/api/v1/admin/dashboard", {
         params: {
           id: "admin",
         },
